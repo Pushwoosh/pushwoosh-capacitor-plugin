@@ -1,10 +1,10 @@
-interface PushwooshConfig {
+export interface PushwooshConfig {
   projectid: string,
   appid: string,
   serviceName?: string
 }
 
-type InboxNotification = {
+export type InboxNotification = {
   code: string;
   title?: string;
   message?: string;
@@ -18,11 +18,11 @@ type InboxNotification = {
   isActionPerformed?: boolean;
 }
 
-type AuthOptions = Record<string, number|string>
+export type AuthOptions = Record<string, number|string>
 
-type RemoteNotificationStatus = Record<string,string|number|boolean>
+export type RemoteNotificationStatus = Record<string,string|number|boolean>
 
-interface PushwooshTags {
+export interface PushwooshTags {
   [index: string]: string | number | string[] | number[]
 }
 

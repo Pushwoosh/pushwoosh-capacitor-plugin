@@ -1,5 +1,5 @@
 import { WebPlugin } from '@capacitor/core';
-
+import {PushwooshConfig, PushwooshTags, AuthOptions, RemoteNotificationStatus, PushwooshNotificationCallback, CallbackID } from './definitions';
 import type { PushwooshPlugin } from './definitions';
 
 export class PushwooshWeb extends WebPlugin implements PushwooshPlugin {
@@ -51,7 +51,7 @@ export class PushwooshWeb extends WebPlugin implements PushwooshPlugin {
   // getRemoteNotificationStatus implementation
   async getRemoteNotificationStatus(): Promise<{ status: RemoteNotificationStatus }> {
     console.log("getRemoteNotificationStatus called");
-    return { status: "enabled" }; // return a dummy status
+    return { status: { code: "enabled" } }; 
   }
 
   // setApplicationIconBadgeNumber implementation
