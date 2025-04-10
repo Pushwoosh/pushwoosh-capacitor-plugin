@@ -30,7 +30,6 @@ export type CallbackID = string;
 export type PushwooshNotificationCallback = (message: string | null, err?: any) => void;
 
 export interface PushwooshPlugin {
-  echo(options: { value: string }): Promise<{ value: string }>;
   onDeviceReady(config: PushwooshConfig): void;
   registerDevice(): Promise<{ pushToken: string }>;
   unregisterDevice(): Promise<void>;

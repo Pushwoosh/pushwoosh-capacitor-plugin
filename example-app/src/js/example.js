@@ -2,7 +2,6 @@ import { Pushwoosh } from 'pushwoosh-capacitor-plugin';
 
 window.testEcho = async () => {
     const inputValue = document.getElementById("echoInput").value;
-    Pushwoosh.echo({ value: inputValue });
     Pushwoosh.onDeviceReady({
         "projectid":"245850018966",
         "appid":"11C10-EF18D"
