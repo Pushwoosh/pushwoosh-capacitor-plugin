@@ -19,10 +19,10 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/wfhm/pushwoosh-capacitor-plugin.git"
+    "url": "git+https://github.com/pushwoosh/pushwoosh-capacitor-plugin.git"
   },
   "bugs": {
-    "url": "https://github.com/wfhm/pushwoosh-capacitor-plugin/issues"
+    "url": "https://github.com/pushwoosh/pushwoosh-capacitor-plugin/issues"
   },
   "keywords": [
     "capacitor",
