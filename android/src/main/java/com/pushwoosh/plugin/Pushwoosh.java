@@ -128,6 +128,18 @@ public class Pushwoosh {
             Log.e(TAG, "Missing appId or projectId in onDeviceReady");
         }
 
+        synchronized (sStartPushLock) {
+        if (sReceivedPushData != null) {
+            sInstance.doOnPushReceived(sReceivedPushData);
+            sReceivedPushData = null;
+        }
+
+        if (sStartPushData != null) {
+            sInstance.doOnPushOpened(sStartPushData);
+            sStartPushData = null;
+        }
+    }
+
         sAppReady.set(true);
     }
 

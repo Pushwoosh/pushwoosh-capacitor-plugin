@@ -1,6 +1,6 @@
 {
   "name": "pushwoosh-capacitor-plugin",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Pushwoosh plugin for Capacitor",
   "main": "dist/plugin.cjs.js",
   "module": "dist/esm/index.js",

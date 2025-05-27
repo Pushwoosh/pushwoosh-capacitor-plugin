@@ -10,6 +10,10 @@ import UserNotifications
     var pushwoosh: PushwooshFramework.Pushwoosh?
     var pushReceivedPluginCall: CAPPluginCall?
     var pushOpenedPluginCall: CAPPluginCall?
+    var _deviceReady: Bool = false
+    @objc var startPushData: [String: Any]?
+    @objc var startPushCleared: Bool = false
+
     
     @objc func pwplugin_didRegisterWithDeviceToken(_ application: UIApplication, deviceToken: Data) {
         PushwooshFramework.Pushwoosh.sharedInstance().handlePushRegistration(deviceToken)
@@ -38,7 +42,68 @@ import UserNotifications
             PushwooshSwizzler.swizzleNotificationHandlers()
         }
         PushNotificationManager.init(applicationCode: appId, appName: nil)
+        
+        _deviceReady = true
+        
+        if let launchNotification = self.pushwoosh?.launchNotification {
+            let notification = createNotificationData(forPush: launchNotification, onStart: true)
+            
+            if let pushReceivedPluginCall = self.pushReceivedPluginCall {
+                pushReceivedPluginCall.resolve(["notification": notification])
+            }
+
+            if let pushOpenedPluginCall = self.pushOpenedPluginCall {
+                pushOpenedPluginCall.resolve(["notification": notification])
+            }
+
+            self.startPushData = nil
+            self.startPushCleared = true
+        }
     }
+    
+    func createNotificationData(forPush pushNotification: [AnyHashable: Any], onStart: Bool) -> [String: Any] {
+        if !onStart && !_deviceReady {
+            print("PUSHWOOSH WARNING: onStart is false, but onDeviceReady has not been called. Did you forget to call onDeviceReady?")
+        }
+        
+        var notification = [String: Any]()
+        
+        notification["onStart"] = onStart
+        
+        let isForeground = UIApplication.shared.applicationState == .active
+        notification["foreground"] = isForeground
+        
+        var message: String?
+        
+        if let aps = pushNotification["aps"] as? [String: Any],
+           let alert = aps["alert"] {
+            if let alertDict = alert as? [String: Any] {
+                message = alertDict["body"] as? String
+            } else if let alertStr = alert as? String {
+                message = alertStr
+            }
+        }
+        
+        if let message = message {
+            notification["message"] = message
+        }
+        
+        if let userdata = PushNotificationManager.push().getCustomPushData(asNSDict: pushNotification) {
+            notification["userdata"] = userdata
+        }
+        
+        notification["ios"] = pushNotification
+        
+        print("Notification opened: \(notification)")
+        
+        if onStart {
+            self.startPushData = notification
+            self.startPushCleared = false
+        }
+        
+        return notification
+    }
+
     
     public func pushReceivedCallback(_ call: CAPPluginCall) {
         pushReceivedPluginCall = call

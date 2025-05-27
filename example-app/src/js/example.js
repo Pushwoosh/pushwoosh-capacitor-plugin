@@ -1,38 +1,51 @@
 import { Pushwoosh } from 'pushwoosh-capacitor-plugin';
 
+function showMessage(text) {
+    const container = document.getElementById('messageArea');
+    const message = document.createElement('p');
+    message.textContent = text;
+    container.appendChild(message);
+}
+
+
 window.testEcho = async () => {
     const inputValue = document.getElementById("echoInput").value;
-    Pushwoosh.onDeviceReady({
-        "projectid":"245850018966",
-        "appid":"11C10-EF18D"
-    });
-
     const pushReceivedCallbackId = await Pushwoosh.pushReceivedCallback( (notification, err) => {
         if (err) {
             console.error("failed to process received notificiation");
+            showMessage("❌ Failed to receive notification");
         } else {
             console.log("received notificiation", notification);
+            showMessage("📩 Push Received: " + JSON.stringify(notification));
+
         }
     });
 
     const pushOpenedCallbackId = await Pushwoosh.pushOpenedCallback( (notification, err) => {
         if (err) {
             console.error("failed to process opened notificiation");
+            showMessage("❌ Failed to open notification");
+
         } else {
             console.log("opened notificiation", notification);
+            showMessage("📬 Push Opened: " + JSON.stringify(notification));
         }
+    });
+    Pushwoosh.onDeviceReady({
+        "projectid":"245850018966",
+        "appid":"11C10-EF18D"
     });
     
     Pushwoosh.setMultiNotificationMode()
     .then(console.log("MultiNotificationMode set"));
 
-    // await Pushwoosh.registerDevice()
-    //     .then(result => {
-    //         console.log("Push token received:", result.pushToken); // Handle the token (e.g., print to logs)
-    //     })
-    //     .catch(error => {
-    //         console.error("Failed to register device:", error); // Handle the error (e.g., print error message)
-    //     });
+    await Pushwoosh.registerDevice()
+        .then(result => {
+            console.log("Push token received:", result.pushToken); // Handle the token (e.g., print to logs)
+        })
+        .catch(error => {
+            console.error("Failed to register device:", error); // Handle the error (e.g., print error message)
+        });
 
     // Pushwoosh.setUserId({userId: "testUser"});
     // Pushwoosh.setLanguage({language: "es"});
