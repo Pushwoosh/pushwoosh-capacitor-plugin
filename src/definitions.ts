@@ -36,13 +36,13 @@ export interface PushwooshPlugin {
   additionalAuthorizationOptions(options: AuthOptions): void;
   setTags(config: PushwooshTags) : Promise<void>;
   getTags(): Promise<{ tags: PushwooshTags }>;
-  getPushToken(): { value: string | null };
-  getPushwooshHWID(): { value: string | null };
+  getPushToken(): Promise<{ value: string | null }>;
+  getPushwooshHWID(): Promise<{ value: string | null }>;
   getRemoteNotificationStatus(): Promise<{ status: RemoteNotificationStatus }>;
   setApplicationIconBadgeNumber(badge: number): void;
   getApplicationIconBadgeNumber(): Promise<{ badge: number }>;
   addToApplicationIconBadgeNumber(badge: number): void;
-  getLaunchNotification(): { notification: string } ;
+  getLaunchNotification(): Promise<{ notification: string }>;
   clearLaunchNotification(): void;
   setUserId(userId: string): void;
   setLanguage(language: string): void;
