@@ -254,24 +254,14 @@ import UserNotifications
         //stub
     }
     
-    public func showGDPRConsentUI(_ call: CAPPluginCall) {
-        PWGDPRManager.shared().showGDPRConsentUI()
-        call.resolve()
-    }
-    
-    public func showGDPRDeletionUI(_ call: CAPPluginCall) {
-        PWGDPRManager.shared().showGDPRDeletionUI()
-        call.resolve()
-    }
-    
     public func setCommunicationEnabled(_ call: CAPPluginCall) {
         let enabled: Bool = call.getBool("enabled") ?? true
-        PWGDPRManager.shared().setCommunicationEnabled(enabled) { error in
-            if (error != nil) {
-                call.reject("Failed to enabled communications with Pushwoosh", error?.localizedDescription)
-            }
-            call.resolve()
+        if (enabled) {
+            PushwooshFramework.Pushwoosh.sharedInstance().startServerCommunication()
+        } else {
+            PushwooshFramework.Pushwoosh.sharedInstance().stopServerCommunication()
         }
+        call.resolve()
     }
 }
 

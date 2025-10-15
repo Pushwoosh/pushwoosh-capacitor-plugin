@@ -123,43 +123,15 @@ export class PushwooshWeb extends WebPlugin implements PushwooshPlugin {
     console.log("presentInboxUI called with params:", params);
   }
 
-  // showGDPRConsentUI implementation
-  showGDPRConsentUI(): void {
-    console.log("showGDPRConsentUI called");
-  }
-
-  // showGDPRDeletionUI implementation
-  showGDPRDeletionUI(): void {
-    console.log("showGDPRDeletionUI called");
-  }
-
   // setCommunicationEnabled implementation
   async setCommunicationEnabled(enabled: boolean): Promise<{ result: void | string }> {
     console.log("setCommunicationEnabled called with enabled:", enabled);
     return { result: undefined }; // return a dummy result
   }
 
-  // removeAllDeviceData implementation
-  async removeAllDeviceData(): Promise<{ result: void | string }> {
-    console.log("removeAllDeviceData called");
-    return { result: undefined }; // return a dummy result
-  }
-
   // isCommunicationEnabled implementation
   isCommunicationEnabled(success: (enabled: boolean) => void): void {
     console.log("isCommunicationEnabled called");
-    success(true); // call the success callback with a dummy value
-  }
-
-  // isDeviceDataRemoved implementation
-  isDeviceDataRemoved(success: (removed: boolean) => void): void {
-    console.log("isDeviceDataRemoved called");
-    success(false); // call the success callback with a dummy value
-  }
-
-  // isAvailableGDPR implementation
-  isAvailableGDPR(success: (isAvailable: boolean) => void): void {
-    console.log("isAvailableGDPR called");
     success(true); // call the success callback with a dummy value
   }
 }

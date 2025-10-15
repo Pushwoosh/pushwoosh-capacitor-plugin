@@ -179,24 +179,9 @@ public class PushwooshPlugin extends Plugin {
     }
 
     @PluginMethod
-    public void showGDPRConsentUI(PluginCall call) {
-        implementation.showGDPRConsentUI(call);
-    }
-
-    @PluginMethod
-    public void showGDPRDeletionUI(PluginCall call) {
-        implementation.showGDPRDeletionUI(call);
-    }
-
-    @PluginMethod
     public void setCommunicationEnabled(PluginCall call) {
         boolean enabled = call.getBoolean("enabled");
         implementation.setCommunicationEnabled(enabled, call);
-    }
-
-    @PluginMethod
-    public void removeAllDeviceData(PluginCall call) {
-        implementation.removeAllDeviceData(call);
     }
 
     private HashMap<String, String> convertToHashMapString(JSObject jsObject) {

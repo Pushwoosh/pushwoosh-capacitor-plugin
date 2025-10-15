@@ -41,10 +41,7 @@ public class PushwooshPlugin: CAPPlugin, CAPBridgedPlugin, UIApplicationDelegate
             CAPPluginMethod(name: "addToApplicationIconBadgeNumber", returnType: CAPPluginReturnPromise),
             CAPPluginMethod(name: "getLaunchNotification", returnType: CAPPluginReturnPromise),
             CAPPluginMethod(name: "clearLaunchNotification", returnType: CAPPluginReturnPromise),
-            CAPPluginMethod(name: "showGDPRConsentUI", returnType: CAPPluginReturnNone),
-            CAPPluginMethod(name: "showGDPRDeletionUI", returnType: CAPPluginReturnNone),
             CAPPluginMethod(name: "setCommunicationEnabled", returnType: CAPPluginReturnPromise),
-            CAPPluginMethod(name: "removeAllDeviceData", returnType: CAPPluginReturnPromise)
         ]
     
     private let implementation = Pushwoosh()
@@ -149,14 +146,6 @@ public class PushwooshPlugin: CAPPlugin, CAPBridgedPlugin, UIApplicationDelegate
     
     @objc func clearLaunchNotification(_ call: CAPPluginCall) {
         implementation.clearLaunchNotification(call)
-    }
-    
-    @objc func showGDPRConsentUI(_ call: CAPPluginCall) {
-        implementation.showGDPRConsentUI(call)
-    }
-    
-    @objc func showGDPRDeletionUI(_ call: CAPPluginCall) {
-        implementation.showGDPRDeletionUI(call)
     }
     
     @objc func setCommunicationEnabled(_ call: CAPPluginCall) {

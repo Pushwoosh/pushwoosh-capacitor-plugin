@@ -35,13 +35,8 @@ npx cap sync
 * [`pushReceivedCallback(...)`](#pushreceivedcallback)
 * [`pushOpenedCallback(...)`](#pushopenedcallback)
 * [`presentInboxUI(...)`](#presentinboxui)
-* [`showGDPRConsentUI()`](#showgdprconsentui)
-* [`showGDPRDeletionUI()`](#showgdprdeletionui)
 * [`setCommunicationEnabled(...)`](#setcommunicationenabled)
-* [`removeAllDeviceData()`](#removealldevicedata)
 * [`isCommunicationEnabled(...)`](#iscommunicationenabled)
-* [`isDeviceDataRemoved(...)`](#isdevicedataremoved)
-* [`isAvailableGDPR(...)`](#isavailablegdpr)
 * [Interfaces](#interfaces)
 * [Type Aliases](#type-aliases)
 
@@ -311,24 +306,6 @@ presentInboxUI(params?: Record<string, any> | undefined) => void
 --------------------
 
 
-### showGDPRConsentUI()
-
-```typescript
-showGDPRConsentUI() => void
-```
-
---------------------
-
-
-### showGDPRDeletionUI()
-
-```typescript
-showGDPRDeletionUI() => void
-```
-
---------------------
-
-
 ### setCommunicationEnabled(...)
 
 ```typescript
@@ -344,17 +321,6 @@ setCommunicationEnabled(enabled: boolean) => Promise<{ result: void | string; }>
 --------------------
 
 
-### removeAllDeviceData()
-
-```typescript
-removeAllDeviceData() => Promise<{ result: void | string; }>
-```
-
-**Returns:** <code>Promise&lt;{ result: string | void; }&gt;</code>
-
---------------------
-
-
 ### isCommunicationEnabled(...)
 
 ```typescript
@@ -364,32 +330,6 @@ isCommunicationEnabled(success: (enabled: boolean) => void) => void
 | Param         | Type                                       |
 | ------------- | ------------------------------------------ |
 | **`success`** | <code>(enabled: boolean) =&gt; void</code> |
-
---------------------
-
-
-### isDeviceDataRemoved(...)
-
-```typescript
-isDeviceDataRemoved(success: (removed: boolean) => void) => void
-```
-
-| Param         | Type                                       |
-| ------------- | ------------------------------------------ |
-| **`success`** | <code>(removed: boolean) =&gt; void</code> |
-
---------------------
-
-
-### isAvailableGDPR(...)
-
-```typescript
-isAvailableGDPR(success: (isAvailable: boolean) => void) => void
-```
-
-| Param         | Type                                           |
-| ------------- | ---------------------------------------------- |
-| **`success`** | <code>(isAvailable: boolean) =&gt; void</code> |
 
 --------------------
 
@@ -421,7 +361,9 @@ isAvailableGDPR(success: (isAvailable: boolean) => void) => void
 
 Construct a type with a set of properties K of type T
 
-<code>{ [P in K]: T; }</code>
+<code>{
+ [P in K]: T;
+ }</code>
 
 
 #### RemoteNotificationStatus

@@ -118,8 +118,6 @@ window.testEcho = async () => {
     const launchNotification = await Pushwoosh.getLaunchNotification();
     Pushwoosh.clearLaunchNotification();
 
-    Pushwoosh.showGDPRConsentUI();
-    Pushwoosh.showGDPRDeletionUI();
     await Pushwoosh.setCommunicationEnabled( {enabled: true} )
     .then(result => { console.log("setCommunicationEnabled success")} )
     .catch(error => { console.log("setCommunicationEnabled failed", error.result)});

@@ -12,14 +12,12 @@ import androidx.annotation.NonNull;
 
 import com.getcapacitor.JSObject;
 import com.getcapacitor.PluginCall;
-import com.pushwoosh.GDPRManager;
 import com.pushwoosh.badge.PushwooshBadge;
 import com.pushwoosh.exception.GetTagsException;
 import com.pushwoosh.exception.PushwooshException;
 import com.pushwoosh.function.Callback;
 import com.pushwoosh.function.Result;
 import com.pushwoosh.inapp.InAppManager;
-import com.pushwoosh.internal.platform.AndroidPlatformModule;
 import com.pushwoosh.internal.utils.PWLog;
 import com.pushwoosh.notification.PushMessage;
 import com.pushwoosh.notification.PushwooshNotificationSettings;
@@ -283,40 +281,13 @@ public class Pushwoosh {
         call.resolve();
     }
 
-    public void showGDPRConsentUI(PluginCall call) {
-        GDPRManager.getInstance().showGDPRConsentUI();
-        call.resolve();
-    }
-
-    public void showGDPRDeletionUI(PluginCall call) {
-        GDPRManager.getInstance().showGDPRDeletionUI();
-        call.resolve();
-    }
-
     public void setCommunicationEnabled(boolean enabled, PluginCall call) {
-        GDPRManager.getInstance().setCommunicationEnabled(enabled, new Callback<Void, PushwooshException>() {
-            @Override
-            public void process(@NonNull Result<Void, PushwooshException> result) {
-                if (result.isSuccess()) {
-                    call.resolve();
-                } else {
-                    call.reject("Failed to set communications with Pushwoosh", result.getException());
-                }
-            }
-        });
-    }
-
-    public void removeAllDeviceData(PluginCall call) {
-        GDPRManager.getInstance().removeAllDeviceData(new Callback<Void, PushwooshException>() {
-            @Override
-            public void process(@NonNull Result<Void, PushwooshException> result) {
-                if (result.isSuccess()) {
-                    call.resolve();
-                } else {
-                     call.reject("Failed to remove device data", result.getException()  );
-                }
-            }
-        });
+        if (enabled) {
+            com.pushwoosh.Pushwoosh.getInstance().startServerCommunication();
+        } else {
+            com.pushwoosh.Pushwoosh.getInstance().stopServerCommunication();
+        }
+        call.resolve();
     }
 
     public void pushReceivedCallback(PluginCall call) {

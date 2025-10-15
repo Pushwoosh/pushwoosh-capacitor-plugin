@@ -52,11 +52,6 @@ export interface PushwooshPlugin {
   pushReceivedCallback(callback: PushwooshNotificationCallback): Promise<CallbackID>;
   pushOpenedCallback(callback: PushwooshNotificationCallback): Promise<CallbackID>;
   presentInboxUI(params?: Record<string,any>): void;
-  showGDPRConsentUI(): void;
-  showGDPRDeletionUI(): void;
   setCommunicationEnabled(enabled: boolean): Promise<{ result: void | string }>;
-  removeAllDeviceData(): Promise<{ result: void | string }>;
   isCommunicationEnabled(success: (enabled: boolean) => void): void;
-  isDeviceDataRemoved(success: (removed: boolean) => void): void;
-  isAvailableGDPR(success: (isAvailable: boolean) => void): void;
 }
