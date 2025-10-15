@@ -46,6 +46,7 @@ export interface PushwooshPlugin {
   clearLaunchNotification(): void;
   setUserId(userId: string): void;
   setLanguage(language: string): void;
+  setApiToken(token: string): void;
   postEvent(event: string, attributes?: Record<string, string>): void;
   setMultiNotificationMode(): Promise<void>;
   setSingleNotificationMode(): Promise<void>;

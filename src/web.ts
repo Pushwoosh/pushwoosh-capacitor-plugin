@@ -91,6 +91,11 @@ export class PushwooshWeb extends WebPlugin implements PushwooshPlugin {
     console.log("setLanguage called with language:", language);
   }
 
+  // setApiToken implementation
+  setApiToken(token: string): void {
+    console.log("setApiToken called with token:", token);
+  }
+
   // postEvent implementation
   postEvent(event: string, attributes?: Record<string, string>): void {
     console.log("postEvent called with event:", event, "and attributes:", attributes);

@@ -197,6 +197,11 @@ public class Pushwoosh {
         call.resolve();
     }
 
+    public void setApiToken(String token, PluginCall call) {
+        com.pushwoosh.Pushwoosh.getInstance().setApiToken(token);
+        call.resolve();
+    }
+
     public void setMultiNotificationMode(PluginCall call) {
         PushwooshNotificationSettings.setMultiNotificationMode(true);
         call.resolve();

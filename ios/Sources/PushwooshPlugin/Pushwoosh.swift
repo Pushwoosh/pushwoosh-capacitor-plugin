@@ -166,6 +166,15 @@ import UserNotifications
         }
     }
     
+    public func setApiToken(_ call: CAPPluginCall) {
+        guard let token = call.getString("token") else {
+            call.reject("Missing token")
+            return
+        }
+        PushwooshConfig.setApiToken(token)
+        call.resolve()
+    }
+    
     public func postEvent(_ call: CAPPluginCall) {
         guard let event = call.getString("event") else {
             call.reject("failed to post event: No event specified")

@@ -30,6 +30,7 @@ public class PushwooshPlugin: CAPPlugin, CAPBridgedPlugin, UIApplicationDelegate
             CAPPluginMethod(name: "getTags", returnType: CAPPluginReturnPromise),
             CAPPluginMethod(name: "setUserId", returnType: CAPPluginReturnPromise),
             CAPPluginMethod(name: "setLanguage", returnType: CAPPluginReturnPromise),
+            CAPPluginMethod(name: "setApiToken", returnType: CAPPluginReturnPromise),
             CAPPluginMethod(name: "setMultiNotificationMode", returnType: CAPPluginReturnPromise),
             CAPPluginMethod(name: "setSingleNotificationMode", returnType: CAPPluginReturnPromise),
             CAPPluginMethod(name: "postEvent", returnType: CAPPluginReturnPromise),
@@ -97,6 +98,10 @@ public class PushwooshPlugin: CAPPlugin, CAPBridgedPlugin, UIApplicationDelegate
     
     @objc func setLanguage(_ call: CAPPluginCall) {
         implementation.setLanguage(call)
+    }
+    
+    @objc func setApiToken(_ call: CAPPluginCall) {
+        implementation.setApiToken(call)
     }
     
     @objc func setMultiNotificationMode(_ call: CAPPluginCall) {

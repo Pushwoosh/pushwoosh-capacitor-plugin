@@ -35,6 +35,10 @@ const Pushwoosh: PushwooshPlugin = {
     return PushwooshNative.setLanguage({ language });
   },
 
+  setApiToken: (token: string) => {
+    return PushwooshNative.setApiToken({ token });
+  },
+
   postEvent: (event: string, attributes?: Record<string, string>) => {
     return PushwooshNative.postEvent({ event, attributes });
   },

@@ -110,6 +110,16 @@ public class PushwooshPlugin extends Plugin {
     }
 
     @PluginMethod
+    public void setApiToken(PluginCall call) {
+        String token = call.getString("token");
+        if (token == null) {
+            call.reject("Missing token");
+            return;
+        }
+        implementation.setApiToken(token, call);
+    }
+
+    @PluginMethod
     public void setMultiNotificationMode(PluginCall call) {
         implementation.setMultiNotificationMode(call);
     }

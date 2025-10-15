@@ -29,6 +29,7 @@ npx cap sync
 * [`clearLaunchNotification()`](#clearlaunchnotification)
 * [`setUserId(...)`](#setuserid)
 * [`setLanguage(...)`](#setlanguage)
+* [`setApiToken(...)`](#setapitoken)
 * [`postEvent(...)`](#postevent)
 * [`setMultiNotificationMode()`](#setmultinotificationmode)
 * [`setSingleNotificationMode()`](#setsinglenotificationmode)
@@ -227,6 +228,19 @@ setLanguage(language: string) => void
 | Param          | Type                |
 | -------------- | ------------------- |
 | **`language`** | <code>string</code> |
+
+--------------------
+
+
+### setApiToken(...)
+
+```typescript
+setApiToken(token: string) => void
+```
+
+| Param       | Type                |
+| ----------- | ------------------- |
+| **`token`** | <code>string</code> |
 
 --------------------
 

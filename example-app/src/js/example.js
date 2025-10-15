@@ -63,6 +63,13 @@ window.testEcho = async () => {
         console.error("❌ setLanguage(string) - FAILED:", error);
     }
     
+    try {
+        await Pushwoosh.setApiToken("test_api_token_123456");
+        console.log("✅ setApiToken(string) - SUCCESS: API token set to 'test_api_token_123456'");
+    } catch (error) {
+        console.error("❌ setApiToken(string) - FAILED:", error);
+    }
+    
     const eventAttributes = {
         username: "john_doe",
         platform: "capacitor",
