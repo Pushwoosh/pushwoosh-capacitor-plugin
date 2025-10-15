@@ -1,8 +1,5 @@
 package com.pushwoosh.plugin;
 
-import static android.app.PendingIntent.getActivity;
-import static androidx.core.app.ActivityCompat.startActivityForResult;
-
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
@@ -14,7 +11,6 @@ import com.getcapacitor.JSObject;
 import com.getcapacitor.PluginCall;
 import com.pushwoosh.badge.PushwooshBadge;
 import com.pushwoosh.exception.GetTagsException;
-import com.pushwoosh.exception.PushwooshException;
 import com.pushwoosh.function.Callback;
 import com.pushwoosh.function.Result;
 import com.pushwoosh.inapp.InAppManager;
@@ -191,14 +187,12 @@ public class Pushwoosh {
         });
     }
 
-    public void setUserId(PluginCall call) {
-        String userId = call.getString("userId");
+    public void setUserId(String userId, PluginCall call) {
         com.pushwoosh.Pushwoosh.getInstance().setUserId(userId);
         call.resolve();
     }
 
-    public void setLanguage(PluginCall call) {
-        String language = call.getString("language");
+    public void setLanguage(String language, PluginCall call) {
         com.pushwoosh.Pushwoosh.getInstance().setLanguage(language);
         call.resolve();
     }
@@ -213,12 +207,10 @@ public class Pushwoosh {
         call.resolve();
     }
 
-    public void postEvent(JSONObject attributes, PluginCall call) {
-        String event = call.getString("event");
+    public void postEvent(String event, JSONObject attributes, PluginCall call) {
         TagsBundle attributesBundle = Tags.fromJson(attributes);
         InAppManager.getInstance().postEvent(event, attributesBundle);
         call.resolve();
-
     }
 
     public void getPushToken(PluginCall call) {

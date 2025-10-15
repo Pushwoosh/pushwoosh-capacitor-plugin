@@ -41,22 +41,41 @@ window.testEcho = async () => {
 
     await Pushwoosh.registerDevice()
         .then(result => {
-            console.log("Push token received:", result.pushToken); // Handle the token (e.g., print to logs)
+            console.log("Push token received:", result.pushToken);
         })
         .catch(error => {
-            console.error("Failed to register device:", error); // Handle the error (e.g., print error message)
+            console.error("Failed to register device:", error);
         });
 
-    // Pushwoosh.setUserId({userId: "testUser"});
-    // Pushwoosh.setLanguage({language: "es"});
-
-    // const eventAttributes = {
-    //   username: "john_doe",
-    //   platform: "web",
-    //   success: "true"
-    // };
-
-    // Pushwoosh.postEvent({ event: "testEvent", attributes: eventAttributes});
+    console.log("🧪 Testing primitive parameter methods...");
+    
+    try {
+        await Pushwoosh.setUserId("testUser123");
+        console.log("✅ setUserId(string) - SUCCESS: User ID set to 'testUser123'");
+    } catch (error) {
+        console.error("❌ setUserId(string) - FAILED:", error);
+    }
+    
+    try {
+        await Pushwoosh.setLanguage("es");
+        console.log("✅ setLanguage(string) - SUCCESS: Language set to 'es'");
+    } catch (error) {
+        console.error("❌ setLanguage(string) - FAILED:", error);
+    }
+    
+    const eventAttributes = {
+        username: "john_doe",
+        platform: "capacitor",
+        test_type: "primitive_params",
+        timestamp: new Date().toISOString()
+    };
+    
+    try {
+        await Pushwoosh.postEvent("testEvent", eventAttributes);
+        console.log("✅ postEvent(string, object) - SUCCESS: Event 'testEvent' posted with attributes:", eventAttributes);
+    } catch (error) {
+        console.error("❌ postEvent(string, object) - FAILED:", error);
+    }
 
     // // await Pushwoosh.unregisterDevice()
     // //     .then(result => {
@@ -108,18 +127,48 @@ window.testEcho = async () => {
     const remoteNotificationStatus = await Pushwoosh.getRemoteNotificationStatus();
     console.log ("Hwid: " + hwid.value + ", Token: " + pushToken.value + ", Status: " + remoteNotificationStatus.status);
 
-    await Pushwoosh.setApplicationIconBadgeNumber({badge: 5});
-    await Pushwoosh.addToApplicationIconBadgeNumber({badge: -3});
-    const badges = await Pushwoosh.getApplicationIconBadgeNumber()
-    .then(result => {
-        console.log("Badge value is : ", result.value)
-    })
+    try {
+        await Pushwoosh.setApplicationIconBadgeNumber(5);
+        console.log("✅ setApplicationIconBadgeNumber(number) - SUCCESS: Badge set to 5");
+    } catch (error) {
+        console.error("❌ setApplicationIconBadgeNumber(number) - FAILED:", error);
+    }
+    
+    try {
+        await Pushwoosh.addToApplicationIconBadgeNumber(-2);
+        console.log("✅ addToApplicationIconBadgeNumber(number) - SUCCESS: Badge decreased by 2");
+    } catch (error) {
+        console.error("❌ addToApplicationIconBadgeNumber(number) - FAILED:", error);
+    }
+    
+    try {
+        const badges = await Pushwoosh.getApplicationIconBadgeNumber();
+        console.log("📱 Final badge value:", badges.badge || badges.value);
+    } catch (error) {
+        console.error("❌ getApplicationIconBadgeNumber - FAILED:", error);
+    }
 
     const launchNotification = await Pushwoosh.getLaunchNotification();
     Pushwoosh.clearLaunchNotification();
 
-    await Pushwoosh.setCommunicationEnabled( {enabled: true} )
-    .then(result => { console.log("setCommunicationEnabled success")} )
-    .catch(error => { console.log("setCommunicationEnabled failed", error.result)});
-
+    try {
+        await Pushwoosh.setCommunicationEnabled(true);
+        console.log("✅ setCommunicationEnabled(boolean) - SUCCESS: Communication enabled");
+    } catch (error) {
+        console.error("❌ setCommunicationEnabled(boolean) - FAILED:", error);
+    }
+    
+    try {
+        await Pushwoosh.setCommunicationEnabled(false);
+        console.log("✅ setCommunicationEnabled(boolean) - SUCCESS: Communication disabled");
+    } catch (error) {
+        console.error("❌ setCommunicationEnabled(boolean) - FAILED:", error);
+    }
+    
+    try {
+        await Pushwoosh.setCommunicationEnabled(true);
+        console.log("✅ setCommunicationEnabled(boolean) - SUCCESS: Communication re-enabled");
+    } catch (error) {
+        console.error("❌ setCommunicationEnabled(boolean) - FAILED:", error);
+    }
 }

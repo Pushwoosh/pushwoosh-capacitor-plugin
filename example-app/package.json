@@ -13,10 +13,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@capacitor/android": "7.0.0",
     "@capacitor/core": "latest",
-    "pushwoosh-capacitor-plugin": "file:..",
     "@capacitor/ios": "7.0.0",
-    "@capacitor/android": "7.0.0"
+    "pushwoosh-capacitor-plugin": "file:.."
   },
   "devDependencies": {
     "@capacitor/cli": "latest",

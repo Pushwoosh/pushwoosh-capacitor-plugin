@@ -3,6 +3,7 @@ package com.pushwoosh.plugin;
 import android.util.Log;
 
 import com.getcapacitor.Bridge;
+import com.getcapacitor.JSArray;
 import com.getcapacitor.JSObject;
 import com.getcapacitor.Plugin;
 import com.getcapacitor.PluginCall;
@@ -90,12 +91,22 @@ public class PushwooshPlugin extends Plugin {
 
     @PluginMethod
     public void setUserId(PluginCall call) {
-        implementation.setUserId(call);
+        String userId = call.getString("userId");
+        if (userId == null) {
+            call.reject("Missing userId");
+            return;
+        }
+        implementation.setUserId(userId, call);
     }
 
     @PluginMethod
     public void setLanguage(PluginCall call) {
-        implementation.setLanguage(call);
+        String language = call.getString("language");
+        if (language == null) {
+            call.reject("Missing language");
+            return;
+        }
+        implementation.setLanguage(language, call);
     }
 
     @PluginMethod
@@ -109,28 +120,35 @@ public class PushwooshPlugin extends Plugin {
     }
     @PluginMethod
     public void postEvent(PluginCall call) {
-        JSObject attributes = call.getObject("attributes");
-        JSONObject jsonAttributes = new JSONObject();
-
+        String event = call.getString("event");
+        if (event == null) {
+            call.reject("Missing event parameter");
+            return;
+        }
+        
         try {
-            for (Iterator<String> it = attributes.keys(); it.hasNext(); ) {
-                String key = it.next();
-                Object value = attributes.get(key);
-
-                // Handle different types of values (string, number, array)
-                if (value instanceof String) {
-                    jsonAttributes.put(key, (String) value);
-                } else if (value instanceof Number) {
-                    jsonAttributes.put(key, value);
-                } else if (value instanceof JSONArray) {
-                    jsonAttributes.put(key, (JSONArray) value);
+            JSObject attributes = call.getObject("attributes");
+            JSONObject jsonAttributes = new JSONObject();
+            
+            if (attributes != null) {
+                for (Iterator<String> it = attributes.keys(); it.hasNext(); ) {
+                    String key = it.next();
+                    Object value = attributes.get(key);
+                    
+                    // Handle different types of values (string, number, array)
+                    if (value instanceof String) {
+                        jsonAttributes.put(key, (String) value);
+                    } else if (value instanceof Number) {
+                        jsonAttributes.put(key, value);
+                    } else if (value instanceof JSONArray) {
+                        jsonAttributes.put(key, (JSONArray) value);
+                    }
                 }
             }
-
-            implementation.postEvent(jsonAttributes, call);
+            
+            implementation.postEvent(event, jsonAttributes, call);
         } catch (Exception e) {
-            // If something fails, reject the call with an error message
-            call.reject("Failed to set tags", e.getMessage());
+            call.reject("Failed to post event", e.getMessage());
         }
     }
 

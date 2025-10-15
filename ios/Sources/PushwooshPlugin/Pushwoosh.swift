@@ -219,13 +219,13 @@ import UserNotifications
     public func getRemoteNotificationStatus(_ call: CAPPluginCall) {
         DispatchQueue.main.async {
             let remoteNotificationStatus = PushNotificationManager.getRemoteNotificationStatus()
-            call.resolve(["status" : remoteNotificationStatus])
+            call.resolve(["status" : remoteNotificationStatus as Any])
         }
     }
     
     public func setApplicationIconBadgeNumber(_ call: CAPPluginCall) {
         DispatchQueue.main.async {
-            let badgeNumber: Int = call.getInt("badge") ?? 0
+            let badgeNumber = call.getInt("badge") ?? 0
             UIApplication.shared.applicationIconBadgeNumber = badgeNumber
             call.resolve()
         }
@@ -239,7 +239,7 @@ import UserNotifications
     
     public func addToApplicationIconBadgeNumber(_ call: CAPPluginCall) {
         DispatchQueue.main.async {
-            let badgeNumber: Int = call.getInt("badge") ?? 0
+            let badgeNumber = call.getInt("badge") ?? 0
             UIApplication.shared.applicationIconBadgeNumber += badgeNumber
             call.resolve()
         }
@@ -247,7 +247,7 @@ import UserNotifications
     
     public func getLaunchNotification(_ call: CAPPluginCall) {
         let launchNotification = pushwoosh?.launchNotification
-        call.resolve(["notification": launchNotification])
+        call.resolve(["notification": launchNotification as Any])
     }
     
     public func clearLaunchNotification(_ call: CAPPluginCall) {
@@ -255,7 +255,7 @@ import UserNotifications
     }
     
     public func setCommunicationEnabled(_ call: CAPPluginCall) {
-        let enabled: Bool = call.getBool("enabled") ?? true
+        let enabled = call.getBool("enabled") ?? true
         if (enabled) {
             PushwooshFramework.Pushwoosh.sharedInstance().startServerCommunication()
         } else {
