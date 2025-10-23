@@ -6,13 +6,13 @@ Pushwoosh plugin for Capacitor
 
 ### NPM Installation
 ```bash
-npm install pushwoosh-capacitor-plugin@1.0.3
+npm install pushwoosh-capacitor-plugin@1.0.4
 npx cap sync
 ```
 
 ### Git Installation
 ```bash
-npm install git+https://github.com/Pushwoosh/pushwoosh-capacitor-plugin.git#1.0.3
+npm install git+https://github.com/Pushwoosh/pushwoosh-capacitor-plugin.git#1.0.4
 npx cap sync
 ```
 
@@ -382,7 +382,9 @@ isCommunicationEnabled(success: (enabled: boolean) => void) => void
 
 Construct a type with a set of properties K of type T
 
-<code>{ [P in K]: T; }</code>
+<code>{
+ [P in K]: T;
+ }</code>
 
 
 #### RemoteNotificationStatus
