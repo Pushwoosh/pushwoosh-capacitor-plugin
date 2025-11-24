@@ -277,13 +277,15 @@ import UserNotifications
 extension Pushwoosh {
     public func onPushReceived(_ pushManager: PushNotificationManager!, withNotification pushNotification: [AnyHashable : Any]!, onStart: Bool) {
         if (pushReceivedPluginCall != nil) {
-            let result = ["notification" : pushNotification]
+            let notification = createNotificationData(forPush: pushNotification, onStart: onStart)
+            let result = ["notification" : notification]
             pushReceivedPluginCall?.resolve(result as PluginCallResultData)
         }    }
-    
+
     public func onPushAccepted(_ pushManager: PushNotificationManager!, withNotification pushNotification: [AnyHashable : Any]!, onStart: Bool) {
         if (pushOpenedPluginCall != nil) {
-            let result = ["notification" : pushNotification]
+            let notification = createNotificationData(forPush: pushNotification, onStart: onStart)
+            let result = ["notification" : notification]
             pushOpenedPluginCall?.resolve(result as PluginCallResultData)
         }
     }
