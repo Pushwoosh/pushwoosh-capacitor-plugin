@@ -6,14 +6,74 @@ Pushwoosh plugin for Capacitor
 
 ### NPM Installation
 ```bash
-npm install pushwoosh-capacitor-plugin@1.0.7
+npm install pushwoosh-capacitor-plugin@1.0.8
 npx cap sync
 ```
 
 ### Git Installation
 ```bash
-npm install git+https://github.com/Pushwoosh/pushwoosh-capacitor-plugin.git#1.0.7
+npm install git+https://github.com/Pushwoosh/pushwoosh-capacitor-plugin.git#1.0.8
 npx cap sync
+```
+
+## Usage
+
+### Initialization
+
+```typescript
+import { Pushwoosh } from 'pushwoosh-capacitor-plugin';
+
+// 1. Register notification callbacks before initialization
+Pushwoosh.pushReceivedCallback((notification, error) => {
+  if (error) {
+    console.error('Push receive error:', error);
+    return;
+  }
+  console.log('Push received:', JSON.stringify(notification));
+});
+
+Pushwoosh.pushOpenedCallback((notification, error) => {
+  if (error) {
+    console.error('Push open error:', error);
+    return;
+  }
+  console.log('Push opened:', JSON.stringify(notification));
+});
+
+// 2. Initialize Pushwoosh
+Pushwoosh.onDeviceReady({
+  appid: 'XXXXX-XXXXX',       // Pushwoosh Application ID
+});
+
+// 3. Register the device to receive push notifications
+const { pushToken } = await Pushwoosh.registerDevice();
+console.log('Registered with token:', pushToken);
+```
+
+### User ID and Events
+
+```typescript
+Pushwoosh.setUserId('user_123');
+
+Pushwoosh.postEvent('purchase', {
+  product: 'Premium Plan',
+  price: '9.99',
+});
+```
+
+### Tags
+
+```typescript
+// Set tags
+await Pushwoosh.setTags({
+  age: 25,
+  name: 'John',
+  favorite_categories: ['sports', 'news'],
+});
+
+// Get tags
+const { tags } = await Pushwoosh.getTags();
+console.log('Tags:', tags);
 ```
 
 ## API
@@ -362,7 +422,6 @@ isCommunicationEnabled(success: (enabled: boolean) => void) => void
 
 | Prop              | Type                |
 | ----------------- | ------------------- |
-| **`projectid`**   | <code>string</code> |
 | **`appid`**       | <code>string</code> |
 | **`serviceName`** | <code>string</code> |
 
@@ -382,9 +441,7 @@ isCommunicationEnabled(success: (enabled: boolean) => void) => void
 
 Construct a type with a set of properties K of type T
 
-<code>{
- [P in K]: T;
- }</code>
+<code>{ [P in K]: T; }</code>
 
 
 #### RemoteNotificationStatus

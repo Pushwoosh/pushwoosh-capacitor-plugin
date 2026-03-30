@@ -9,7 +9,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <meta-data android:name="com.pushwoosh.log_level" android:value="DEBUG"/>
+        <meta-data android:name="com.pushwoosh.log_level" android:value="NOISE"/>
 
         <activity
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|smallestScreenSize|screenLayout|uiMode|navigation"

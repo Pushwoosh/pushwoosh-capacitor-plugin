@@ -3,8 +3,6 @@ package com.pushwoosh.plugin;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 
 import com.getcapacitor.JSObject;
@@ -55,7 +53,6 @@ public class Pushwoosh {
                 }
             }
         } catch (Exception e) {
-            // React Native is highly unstable
             PWLog.exception(e);
         }
     }
@@ -77,7 +74,6 @@ public class Pushwoosh {
                 }
             }
         } catch (Exception e) {
-            // React Native is highly unstable
             PWLog.exception(e);
         }
     }
@@ -112,27 +108,25 @@ public class Pushwoosh {
 
     public void onDeviceReady(Map<String, String> config) {
         String appId = config.get("appid");
-        String projectId = config.get("projectid");
 
-        if (appId != null && projectId != null) {
+        if (appId != null) {
             com.pushwoosh.Pushwoosh.getInstance().setAppId(appId);
-            com.pushwoosh.Pushwoosh.getInstance().setSenderId(projectId);
-            Log.i(TAG, "Pushwoosh is initialized with appId: " + appId + " and projectId: " + projectId);
+            PWLog.info(TAG, "Pushwoosh is initialized with appId: " + appId);
         } else {
-            Log.e(TAG, "Missing appId or projectId in onDeviceReady");
+            PWLog.error(TAG, "Missing appId in onDeviceReady");
         }
 
         synchronized (sStartPushLock) {
-        if (sReceivedPushData != null) {
-            sInstance.doOnPushReceived(sReceivedPushData);
-            sReceivedPushData = null;
-        }
+            if (sReceivedPushData != null) {
+                sInstance.doOnPushReceived(sReceivedPushData);
+                sReceivedPushData = null;
+            }
 
-        if (sStartPushData != null) {
-            sInstance.doOnPushOpened(sStartPushData);
-            sStartPushData = null;
+            if (sStartPushData != null) {
+                sInstance.doOnPushOpened(sStartPushData);
+                sStartPushData = null;
+            }
         }
-    }
 
         sAppReady.set(true);
     }

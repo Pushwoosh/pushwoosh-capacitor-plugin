@@ -35,7 +35,7 @@ This example app demonstrates how to use the Pushwoosh Capacitor plugin in your 
 
 Before running the app, you need to:
 
-1. Replace the `projectid` and `appid` in `src/js/example.js` with your Pushwoosh credentials
+1. Replace the `appid` in `src/js/example.js` with your Pushwoosh Application ID
 2. Add your `google-services.json` (Android) and `GoogleService-Info.plist` (iOS) files
 3. Configure push notification capabilities in your native projects
 

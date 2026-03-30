@@ -1,28 +1,73 @@
 <!doctype html>
-<html lang="en" dir="ltr" class="hydrated">
+<html lang="en" dir="ltr">
   <head>
     <meta charset="UTF-8" />
-    <title>Example Capacitor App</title>
+    <title>Pushwoosh Demo</title>
     <meta
       name="viewport"
       content="viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"
     />
     <meta name="format-detection" content="telephone=no" />
+    <meta name="theme-color" content="#FFF7FE" />
+    <link rel="stylesheet" href="./css/styles.css" />
   </head>
   <body>
     <main>
-      <h1>Capacitor Test Plugin Project</h1>
-      <p>
-        This project can be used to test out the functionality of your plugin. Nothing in the
-        <em>example-app/</em> folder will be published to npm when using this template, so you can create away!
-      </p>
-      <label for="echoInput">Echo Text:</label>
-      <input type="text" id="echoInput" name="echoInput" value="Hello World!" />
-      <button onclick="testEcho()">Click Me!</button>
 
-      <hr>
-      <h2>Push Notification Messages</h2>
-      <div id="messageArea"></div>
+      <!-- Welcome Card -->
+      <section class="card card--welcome">
+        <h1 class="md-display">Pushwoosh Demo</h1>
+        <p class="md-body">Capacitor plugin integration test</p>
+      </section>
+
+      <!-- Registration Status -->
+      <section class="card" id="statusSection">
+        <h2 class="md-title card__title">Status</h2>
+        <div class="status-row">
+          <span class="status-dot" id="statusDot"></span>
+          <span class="status-text md-body" id="statusText">Initializing...</span>
+        </div>
+        <div id="pushTokenContainer" class="hidden">
+          <label class="md-label text-muted">Push Token</label>
+          <div class="token-display" id="pushTokenDisplay">--</div>
+        </div>
+      </section>
+
+      <!-- User Settings -->
+      <section class="card" id="userSection">
+        <h2 class="md-title card__title">User</h2>
+        <div class="input-row">
+          <div class="input-field">
+            <label for="userIdInput">User ID</label>
+            <input type="text" id="userIdInput" placeholder="e.g. user_123" />
+          </div>
+          <button class="btn btn--filled" id="setUserIdBtn">Set</button>
+        </div>
+      </section>
+
+      <!-- Post Event -->
+      <section class="card" id="eventsSection">
+        <h2 class="md-title card__title">Events</h2>
+        <div class="input-row">
+          <div class="input-field">
+            <label for="eventNameInput">Event Name</label>
+            <input type="text" id="eventNameInput" value="purchase" placeholder="e.g. purchase" />
+          </div>
+          <button class="btn btn--filled" id="postEventBtn">Post</button>
+        </div>
+      </section>
+
+      <!-- Device Info -->
+      <section class="card" id="deviceInfoSection">
+        <h2 class="md-title card__title">Device Info</h2>
+        <div class="btn-group">
+          <button class="btn btn--outlined" id="getPushTokenBtn">Push Token</button>
+          <button class="btn btn--outlined" id="getHwidBtn">HWID</button>
+          <button class="btn btn--outlined" id="getStatusBtn">Status</button>
+        </div>
+        <div id="deviceInfoDisplay" class="token-display hidden">--</div>
+      </section>
+
     </main>
 
     <script src="./js/example.js" type="module"></script>

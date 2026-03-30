@@ -1,5 +1,5 @@
 {
-  "appId": "com.example.plugin",
+  "appId": "com.pushwoosh.demoapp",
   "appName": "example-app",
   "webDir": "dist",
   "plugins": {

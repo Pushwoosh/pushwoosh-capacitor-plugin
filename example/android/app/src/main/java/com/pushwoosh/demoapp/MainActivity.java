@@ -1,4 +1,4 @@
-package com.example.plugin;
+package com.pushwoosh.demoapp;
 
 import com.getcapacitor.BridgeActivity;
 
