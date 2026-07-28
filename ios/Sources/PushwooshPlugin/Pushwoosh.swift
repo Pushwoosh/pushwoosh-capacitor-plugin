@@ -41,7 +41,7 @@ import UserNotifications
         DispatchQueue.main.async {
             PushwooshSwizzler.swizzleNotificationHandlers()
         }
-        PushNotificationManager.init(applicationCode: appId, appName: nil)
+        PushNotificationManager.initialize(withAppCode: appId, appName: nil)
         
         _deviceReady = true
         
