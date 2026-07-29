@@ -6,13 +6,13 @@ Pushwoosh plugin for Capacitor
 
 ### NPM Installation
 ```bash
-npm install pushwoosh-capacitor-plugin@1.0.9
+npm install pushwoosh-capacitor-plugin@1.0.10
 npx cap sync
 ```
 
 ### Git Installation
 ```bash
-npm install git+https://github.com/Pushwoosh/pushwoosh-capacitor-plugin.git#1.0.9
+npm install git+https://github.com/Pushwoosh/pushwoosh-capacitor-plugin.git#1.0.10
 npx cap sync
 ```
 
