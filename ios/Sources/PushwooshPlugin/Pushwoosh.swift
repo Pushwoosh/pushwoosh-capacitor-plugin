@@ -8,13 +8,32 @@ import UserNotifications
 @objc public class Pushwoosh: NSObject, PushNotificationDelegate, UIApplicationDelegate, UNUserNotificationCenterDelegate  {
     var pushManager: PushNotificationManager?
     var pushwoosh: PushwooshFramework.Pushwoosh?
-    var pushReceivedPluginCall: CAPPluginCall?
-    var pushOpenedPluginCall: CAPPluginCall?
     var _deviceReady: Bool = false
     @objc var startPushData: [String: Any]?
     @objc var startPushCleared: Bool = false
 
-    
+    // Registered from the bridge's serial queue, read from main on delivery — hence the lock.
+    private let pluginCallLock = NSLock()
+    private var _pushReceivedPluginCall: CAPPluginCall?
+    private var _pushOpenedPluginCall: CAPPluginCall?
+
+    // Foundation's own NSLocking.withLock is iOS 16+; this package deploys to 14.0.
+    private func withPluginCallLock<T>(_ body: () -> T) -> T {
+        pluginCallLock.lock()
+        defer { pluginCallLock.unlock() }
+        return body()
+    }
+
+    var pushReceivedPluginCall: CAPPluginCall? {
+        get { withPluginCallLock { _pushReceivedPluginCall } }
+        set { withPluginCallLock { _pushReceivedPluginCall = newValue } }
+    }
+
+    var pushOpenedPluginCall: CAPPluginCall? {
+        get { withPluginCallLock { _pushOpenedPluginCall } }
+        set { withPluginCallLock { _pushOpenedPluginCall = newValue } }
+    }
+
     @objc func pwplugin_didRegisterWithDeviceToken(_ application: UIApplication, deviceToken: Data) {
         PushwooshFramework.Pushwoosh.sharedInstance().handlePushRegistration(deviceToken)
     }
@@ -106,13 +125,13 @@ import UserNotifications
 
     
     public func pushReceivedCallback(_ call: CAPPluginCall) {
+        call.keepAlive = true
         pushReceivedPluginCall = call
-        pushReceivedPluginCall?.keepAlive = true
     }
     
     public func pushOpenedCallback(_ call: CAPPluginCall) {
+        call.keepAlive = true
         pushOpenedPluginCall = call
-        pushOpenedPluginCall?.keepAlive = true
     }
     
     public func registerDevice(_ call: CAPPluginCall) {
@@ -276,18 +295,22 @@ import UserNotifications
 
 extension Pushwoosh {
     public func onPushReceived(_ pushManager: PushNotificationManager!, withNotification pushNotification: [AnyHashable : Any]!, onStart: Bool) {
-        if (pushReceivedPluginCall != nil) {
-            let notification = createNotificationData(forPush: pushNotification, onStart: onStart)
-            let result = ["notification" : notification]
-            pushReceivedPluginCall?.resolve(result as PluginCallResultData)
-        }    }
+        // One load, not two: a registration landing in between must not redirect this delivery.
+        guard let call = pushReceivedPluginCall else {
+            return
+        }
+        let notification = createNotificationData(forPush: pushNotification, onStart: onStart)
+        let result = ["notification" : notification]
+        call.resolve(result as PluginCallResultData)
+    }
 
     public func onPushAccepted(_ pushManager: PushNotificationManager!, withNotification pushNotification: [AnyHashable : Any]!, onStart: Bool) {
-        if (pushOpenedPluginCall != nil) {
-            let notification = createNotificationData(forPush: pushNotification, onStart: onStart)
-            let result = ["notification" : notification]
-            pushOpenedPluginCall?.resolve(result as PluginCallResultData)
+        guard let call = pushOpenedPluginCall else {
+            return
         }
+        let notification = createNotificationData(forPush: pushNotification, onStart: onStart)
+        let result = ["notification" : notification]
+        call.resolve(result as PluginCallResultData)
     }
 }
 

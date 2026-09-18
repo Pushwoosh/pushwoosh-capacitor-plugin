@@ -13,7 +13,7 @@ Pod::Spec.new do |s|
   s.source_files = 'ios/Sources/**/*.{swift,h,m,c,cc,mm,cpp}'
   s.ios.deployment_target = '14.0'
   s.dependency 'Capacitor'
-  s.dependency 'PushwooshXCFramework', '7.2.0'
-  s.dependency 'PushwooshInboxUIXCFramework'
+  s.dependency 'PushwooshXCFramework', '7.2.6'
+  s.dependency 'PushwooshInboxUIXCFramework', '7.0.42'
   s.swift_version = '5.1'
 end

@@ -40,7 +40,10 @@ public class Pushwoosh {
     private final Handler handler = new Handler(Looper.getMainLooper());
 
     public Pushwoosh() {
-        sInstance = this;
+        // sInstance is published under the same lock the deliveries read it with.
+        synchronized (sStartPushLock) {
+            sInstance = this;
+        }
         sAppReady.set(false);
     }
 
@@ -58,11 +61,14 @@ public class Pushwoosh {
     }
 
     private void doOnPushOpened(String pushData) {
-        if (pushOpenedPluginCall != null) {
-            JSObject result = new JSObject();
-            result.put("notification", pushData);
-            pushOpenedPluginCall.resolve(result);
+        // One load, not two: a registration landing in between must not redirect this delivery.
+        PluginCall call = pushOpenedPluginCall;
+        if (call == null) {
+            return;
         }
+        JSObject result = new JSObject();
+        result.put("notification", pushData);
+        call.resolve(result);
     }
 
     static void messageReceived(String pushData) {
@@ -79,11 +85,13 @@ public class Pushwoosh {
     }
 
     private void doOnPushReceived(String pushData) {
-        if (pushReceivedPluginCall != null) {
-            JSObject result = new JSObject();
-            result.put("notification", pushData);
-            pushReceivedPluginCall.resolve(result);
+        PluginCall call = pushReceivedPluginCall;
+        if (call == null) {
+            return;
         }
+        JSObject result = new JSObject();
+        result.put("notification", pushData);
+        call.resolve(result);
     }
 
     private JSONObject getPushFromIntent(Intent intent) {
@@ -281,13 +289,18 @@ public class Pushwoosh {
         call.resolve();
     }
 
+    // Written from the bridge thread, read from the delivery thread — hence the same lock.
     public void pushReceivedCallback(PluginCall call) {
-        pushReceivedPluginCall = call;
-        pushReceivedPluginCall.setKeepAlive(true);
+        call.setKeepAlive(true);
+        synchronized (sStartPushLock) {
+            pushReceivedPluginCall = call;
+        }
     }
 
     public void pushOpenedCallback(PluginCall call) {
-        pushOpenedPluginCall = call;
-        pushOpenedPluginCall.setKeepAlive(true);
+        call.setKeepAlive(true);
+        synchronized (sStartPushLock) {
+            pushOpenedPluginCall = call;
+        }
     }
 }

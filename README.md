@@ -6,13 +6,13 @@ Pushwoosh plugin for Capacitor
 
 ### NPM Installation
 ```bash
-npm install pushwoosh-capacitor-plugin@1.0.10
+npm install pushwoosh-capacitor-plugin@1.0.11
 npx cap sync
 ```
 
 ### Git Installation
 ```bash
-npm install git+https://github.com/Pushwoosh/pushwoosh-capacitor-plugin.git#1.0.10
+npm install git+https://github.com/Pushwoosh/pushwoosh-capacitor-plugin.git#1.0.11
 npx cap sync
 ```
 
@@ -186,10 +186,10 @@ getTags() => Promise<{ tags: PushwooshTags; }>
 ### getPushToken()
 
 ```typescript
-getPushToken() => { value: string | null; }
+getPushToken() => Promise<{ value: string | null; }>
 ```
 
-**Returns:** <code>{ value: string | null; }</code>
+**Returns:** <code>Promise&lt;{ value: string | null; }&gt;</code>
 
 --------------------
 
@@ -197,10 +197,10 @@ getPushToken() => { value: string | null; }
 ### getPushwooshHWID()
 
 ```typescript
-getPushwooshHWID() => { value: string | null; }
+getPushwooshHWID() => Promise<{ value: string | null; }>
 ```
 
-**Returns:** <code>{ value: string | null; }</code>
+**Returns:** <code>Promise&lt;{ value: string | null; }&gt;</code>
 
 --------------------
 
@@ -256,10 +256,15 @@ addToApplicationIconBadgeNumber(badge: number) => void
 ### getLaunchNotification()
 
 ```typescript
-getLaunchNotification() => { notification: string; }
+getLaunchNotification() => Promise<{ notification: string; }>
 ```
 
-**Returns:** <code>{ notification: string; }</code>
+Android resolves the launch notification as a JSON string under `value`, and resolves nothing
+when the app was not opened from a push, so the promise settles as `undefined`. iOS resolves
+the raw notification dictionary under `notification`, or `null` in that same case. The declared
+shape below matches neither platform; the payload mismatch is tracked separately.
+
+**Returns:** <code>Promise&lt;{ notification: string; }&gt;</code>
 
 --------------------
 

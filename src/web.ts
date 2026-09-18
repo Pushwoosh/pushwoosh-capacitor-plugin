@@ -37,13 +37,13 @@ export class PushwooshWeb extends WebPlugin implements PushwooshPlugin {
   }
 
   // getPushToken implementation
-  getPushToken(): { value: string | null } {
+  async getPushToken(): Promise<{ value: string | null }> {
     console.log("getPushToken called");
     return { value: "dummyPushToken" }; // return a dummy token
   }
 
   // getPushwooshHWID implementation
-  getPushwooshHWID(): { value: string | null } {
+  async getPushwooshHWID(): Promise<{ value: string | null }> {
     console.log("getPushwooshHWID called");
     return { value: "dummyHWID" }; // return a dummy HWID
   }
@@ -71,7 +71,7 @@ export class PushwooshWeb extends WebPlugin implements PushwooshPlugin {
   }
 
   // getLaunchNotification implementation
-  getLaunchNotification(): { notification: string } {
+  async getLaunchNotification(): Promise<{ notification: string }> {
     console.log("getLaunchNotification called");
     return { notification: "" }; // return empty notification as a stub
   }

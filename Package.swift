@@ -13,7 +13,7 @@ let package = Package(
         .package(url: "https://github.com/ionic-team/capacitor-swift-pm.git", from: "7.0.0"),
         // tools/release.bash rewrites this line's version via a sed anchored on its exact formatting — keep it on one line, spacing unchanged.
         // exact: is deliberate, mirroring the podspec's hard pin: relaxing to from: would let CocoaPods and SPM consumers land on different native SDK versions.
-        .package(url: "https://github.com/Pushwoosh/Pushwoosh-XCFramework.git", exact: "7.2.0")
+        .package(url: "https://github.com/Pushwoosh/Pushwoosh-XCFramework.git", exact: "7.2.6")
     ],
     targets: [
         .target(

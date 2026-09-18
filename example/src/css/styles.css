@@ -215,7 +215,8 @@ main {
 }
 
 /* Token display */
-.token-display {
+.token-display,
+.deep-link-url {
   background-color: var(--md-surface-container-high);
   border-radius: var(--md-shape-badge);
   padding: var(--md-spacing-sm) var(--md-spacing-md);
@@ -569,6 +570,29 @@ main {
 /* Hide elements */
 .hidden {
   display: none !important;
+}
+
+/* --- Deep link screen --- */
+.deep-link-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--md-spacing-md);
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+  padding: calc(var(--md-spacing-lg) + var(--safe-area-top)) var(--md-spacing-lg)
+    calc(var(--md-spacing-lg) + var(--safe-area-bottom));
+  background-color: var(--md-background);
+  text-align: center;
+}
+
+.deep-link-url {
+  align-self: stretch;
 }
 
 /* --- Scrollbar styling --- */

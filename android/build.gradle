@@ -3,7 +3,7 @@ ext {
     androidxAppCompatVersion = project.hasProperty('androidxAppCompatVersion') ? rootProject.ext.androidxAppCompatVersion : '1.6.1'
     androidxJunitVersion = project.hasProperty('androidxJunitVersion') ? rootProject.ext.androidxJunitVersion : '1.1.5'
     androidxEspressoCoreVersion = project.hasProperty('androidxEspressoCoreVersion') ? rootProject.ext.androidxEspressoCoreVersion : '3.5.1'
-    pushwooshVersion = '6.10.0'
+    pushwooshVersion = '6.14.0'
 }
 
 buildscript {
@@ -22,7 +22,8 @@ android {
     namespace "com.pushwoosh.plugin"
     compileSdk project.hasProperty('compileSdkVersion') ? rootProject.ext.compileSdkVersion : 34
     defaultConfig {
-        minSdkVersion project.hasProperty('minSdkVersion') ? rootProject.ext.minSdkVersion : 22
+        // 22 never merged a manifest standalone: :capacitor-android itself requires 23.
+        minSdkVersion project.hasProperty('minSdkVersion') ? rootProject.ext.minSdkVersion : 23
         targetSdkVersion project.hasProperty('targetSdkVersion') ? rootProject.ext.targetSdkVersion : 34
         versionCode 1
         versionName "1.0"
@@ -41,6 +42,11 @@ android {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
     }
+    testOptions {
+        unitTests {
+            includeAndroidResources = true
+        }
+    }
 }
 
 repositories {
@@ -49,6 +55,11 @@ repositories {
     maven { url 'https://maven.google.com' }
 }
 
+
+// Unit-test classpaths only: Robolectric's androidx.core 1.15 wants a compileSdk this module is below.
+configurations.matching { it.name.toLowerCase().contains('unittest') }.configureEach {
+    resolutionStrategy.force 'androidx.core:core:1.13.1'
+}
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
@@ -67,6 +78,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-messaging:(+,23.1.99]'
     implementation 'androidx.databinding:viewbinding:8.1.1'
     testImplementation "junit:junit:$junitVersion"
+    testImplementation "org.robolectric:robolectric:4.14.1"
     androidTestImplementation "androidx.test.ext:junit:$androidxJunitVersion"
     androidTestImplementation "androidx.test.espresso:espresso-core:$androidxEspressoCoreVersion"
 }

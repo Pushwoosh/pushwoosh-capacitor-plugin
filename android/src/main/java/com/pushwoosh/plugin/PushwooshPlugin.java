@@ -23,20 +23,14 @@ import java.util.List;
 public class PushwooshPlugin extends Plugin {
 
     private Pushwoosh implementation = new Pushwoosh();
-    private static String pushReceivedCallbackId = "";
-    private static String pushOpenedCallbackId = "";
 
     @PluginMethod(returnType = PluginMethod.RETURN_CALLBACK)
     public void pushReceivedCallback(PluginCall call) {
-        pushReceivedCallbackId = call.getCallbackId();
-        call.setKeepAlive(true);
         implementation.pushReceivedCallback(call);
     }
 
     @PluginMethod(returnType = PluginMethod.RETURN_CALLBACK)
     public void pushOpenedCallback(PluginCall call) {
-        pushOpenedCallbackId = call.getCallbackId();
-        call.setKeepAlive(true);
         implementation.pushOpenedCallback(call);
     }
 
@@ -179,7 +173,11 @@ public class PushwooshPlugin extends Plugin {
 
     @PluginMethod
     public void setApplicationIconBadgeNumber(PluginCall call) {
-        int badgeNumber = call.getInt("badge");
+        Integer badgeNumber = call.getInt("badge");
+        if (badgeNumber == null) {
+            call.reject("Missing badge");
+            return;
+        }
         implementation.setApplicationIconBadgeNumber(badgeNumber);
         call.resolve();
     }
@@ -191,7 +189,11 @@ public class PushwooshPlugin extends Plugin {
 
     @PluginMethod
     public void addToApplicationIconBadgeNumber(PluginCall call) {
-        int badgeNumber = call.getInt("badge");
+        Integer badgeNumber = call.getInt("badge");
+        if (badgeNumber == null) {
+            call.reject("Missing badge");
+            return;
+        }
         implementation.addToApplicationIconBadgeNumber(badgeNumber);
         call.resolve();
     }
@@ -208,7 +210,11 @@ public class PushwooshPlugin extends Plugin {
 
     @PluginMethod
     public void setCommunicationEnabled(PluginCall call) {
-        boolean enabled = call.getBoolean("enabled");
+        Boolean enabled = call.getBoolean("enabled");
+        if (enabled == null) {
+            call.reject("Missing enabled");
+            return;
+        }
         implementation.setCommunicationEnabled(enabled, call);
     }
 

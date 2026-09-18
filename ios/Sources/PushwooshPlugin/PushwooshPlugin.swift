@@ -10,15 +10,6 @@ import PushwooshFramework
 public class PushwooshPlugin: CAPPlugin, CAPBridgedPlugin, UIApplicationDelegate, PWMessagingDelegate {
     public let identifier = "PushwooshPlugin"
     public let jsName = "Pushwoosh"
-    
-    var callbackIds: NSMutableDictionary?
-    var pushManager: PushNotificationManager?
-    var pushwoosh: PushwooshFramework.Pushwoosh?
-    var startPushData: [String: Any]?
-    var startPushCleared: Bool = false
-    var deviceReady: Bool = false
-    
-    private var notificationDelegateHandler = Pushwoosh()
 
     public let pluginMethods: [CAPPluginMethod] = [
             CAPPluginMethod(name: "pushReceivedCallback", returnType: CAPPluginReturnCallback),
@@ -81,14 +72,10 @@ public class PushwooshPlugin: CAPPlugin, CAPBridgedPlugin, UIApplicationDelegate
     }
     
     @objc func pushReceivedCallback(_ call: CAPPluginCall) {
-        let  pushReceivedCallbackId = call.callbackId
-        call.keepAlive = true
         implementation.pushReceivedCallback(call)
     }
     
     @objc func pushOpenedCallback(_ call: CAPPluginCall) {
-        let  pushOpenedCallbackId = call.callbackId
-        call.keepAlive = true
         implementation.pushOpenedCallback(call)
     }
     

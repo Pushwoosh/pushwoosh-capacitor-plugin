@@ -1,8 +1,11 @@
 {
-  "appId": "com.pushwoosh.demoapp",
+  "appId": "com.example.sampleapp",
   "appName": "example-app",
   "webDir": "dist",
   "plugins": {
+    "App": {
+      "disableBackButtonHandler": true
+    },
     "SplashScreen": {
       "launchAutoHide": false
     }

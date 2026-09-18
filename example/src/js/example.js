@@ -1,4 +1,5 @@
 import { Pushwoosh } from 'pushwoosh-capacitor-plugin';
+import { App } from '@capacitor/app';
 
 const $ = (id) => document.getElementById(id);
 
@@ -21,6 +22,13 @@ function showDeviceInfo(text) {
   el.classList.remove('hidden');
 }
 
+function openDeepLink(url) {
+  if (!url) return;
+  console.log('Deep link opened:', url);
+  $('deepLinkUrl').textContent = url;
+  $('deepLinkScreen').classList.remove('hidden');
+}
+
 async function initPushwoosh() {
   Pushwoosh.pushReceivedCallback((notification, err) => {
     if (err) {
@@ -39,13 +47,13 @@ async function initPushwoosh() {
   });
 
   Pushwoosh.onDeviceReady({
-    appid: '11C10-EF18D',
+    appid: 'XXXXX-XXXXX',
   });
 
   Pushwoosh.setMultiNotificationMode();
 
   try {
-    await Pushwoosh.setApiToken('test_api_token_123456');
+    await Pushwoosh.setApiToken('YOUR_API_TOKEN');
   } catch (e) {
     console.error('Failed to set API token:', e);
   }
@@ -112,5 +120,11 @@ $('getStatusBtn').addEventListener('click', async () => {
     console.error('Failed to get status:', error);
   }
 });
+
+$('deepLinkBackBtn').addEventListener('click', () => {
+  $('deepLinkScreen').classList.add('hidden');
+});
+
+App.addListener('appUrlOpen', (event) => openDeepLink(event.url));
 
 initPushwoosh();

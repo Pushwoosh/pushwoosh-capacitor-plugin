@@ -35,13 +35,19 @@ export interface PushwooshPlugin {
   additionalAuthorizationOptions(options: AuthOptions): void;
   setTags(config: PushwooshTags) : Promise<void>;
   getTags(): Promise<{ tags: PushwooshTags }>;
-  getPushToken(): { value: string | null };
-  getPushwooshHWID(): { value: string | null };
+  getPushToken(): Promise<{ value: string | null }>;
+  getPushwooshHWID(): Promise<{ value: string | null }>;
   getRemoteNotificationStatus(): Promise<{ status: RemoteNotificationStatus }>;
   setApplicationIconBadgeNumber(badge: number): void;
   getApplicationIconBadgeNumber(): Promise<{ badge: number }>;
   addToApplicationIconBadgeNumber(badge: number): void;
-  getLaunchNotification(): { notification: string } ;
+  /**
+   * Android resolves the launch notification as a JSON string under `value`, and resolves nothing
+   * when the app was not opened from a push, so the promise settles as `undefined`. iOS resolves
+   * the raw notification dictionary under `notification`, or `null` in that same case. The declared
+   * shape below matches neither platform; the payload mismatch is tracked separately.
+   */
+  getLaunchNotification(): Promise<{ notification: string }>;
   clearLaunchNotification(): void;
   setUserId(userId: string): void;
   setLanguage(language: string): void;
