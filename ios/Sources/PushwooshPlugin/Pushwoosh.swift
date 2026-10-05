@@ -17,7 +17,7 @@ import UserNotifications
     private var _pushReceivedPluginCall: CAPPluginCall?
     private var _pushOpenedPluginCall: CAPPluginCall?
 
-    // Foundation's own NSLocking.withLock is iOS 16+; this package deploys to 14.0.
+    // Foundation's own NSLocking.withLock is iOS 16+; this package deploys to 15.0.
     private func withPluginCallLock<T>(_ body: () -> T) -> T {
         pluginCallLock.lock()
         defer { pluginCallLock.unlock() }
