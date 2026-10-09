@@ -9,10 +9,14 @@ class PluginCallTestCase: XCTestCase {
     /// Callback ids of the calls resolved so far, in resolve order.
     private(set) var resolved: [String] = []
 
+    /// Callback ids of the calls rejected so far, paired with the message, in reject order.
+    private(set) var rejected: [(callbackId: String, message: String)] = []
+
     override func setUp() {
         super.setUp()
         XCTAssertTrue(notificationCenterStubbed)
         resolved = []
+        rejected = []
     }
 
     /// A call that records its own resolve instead of posting through the bridge, which cannot be
@@ -27,6 +31,22 @@ class PluginCallTestCase: XCTestCase {
             },
             error: { _ in
                 XCTFail("the plugin call must not be rejected")
+            }
+        )
+    }
+
+    /// A call that records its own rejection. The counterpart of `makeCall`, for the paths whose
+    /// whole point is that they reject: there a resolve is the failure.
+    func makeRejectingCall(_ callbackId: String, methodName: String, options: [String: Any] = [:]) -> CAPPluginCall {
+        CAPPluginCall(
+            callbackId: callbackId,
+            methodName: methodName,
+            options: options,
+            success: { _, _ in
+                XCTFail("the plugin call must not be resolved")
+            },
+            error: { [weak self] error in
+                self?.rejected.append((callbackId, error?.message ?? "<nil>"))
             }
         )
     }

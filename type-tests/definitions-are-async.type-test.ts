@@ -11,13 +11,15 @@
  * fails to compile.
  *
  * For every getter the suite pins awaitability; for `getPushToken` and `getPushwooshHWID` it
- * also pins the `value` field, which both native sides really resolve. Only
- * `getLaunchNotification`'s payload shape is left unpinned — it differs per platform and is
- * tracked separately.
+ * also pins the `value` field, which both native sides really resolve, and for `getTags` the
+ * flat result (tags at the top level, no `tags` envelope), which is what both native sides
+ * resolve and what the other Pushwoosh plugins return. Only `getLaunchNotification`'s payload
+ * shape is left unpinned — it differs per platform and is tracked separately.
  *
  * Run: `npm run test:types`
  */
 import { Pushwoosh } from '../src/index';
+import type { PushwooshTags } from '../src/index';
 
 export function launchNotificationIsAsync(): Promise<{ notification: string }> {
   return Pushwoosh.getLaunchNotification();
@@ -59,4 +61,24 @@ export function pushTokenRejectsSyncMember(): number {
 export function hwidRejectsSyncMember(): string {
   // @ts-expect-error a nullish-coalescing guard does not make the synchronous read legal
   return Pushwoosh.getPushwooshHWID().value ?? 'unknown';
+}
+
+export function tagsAreFlat(): Promise<PushwooshTags> {
+  return Pushwoosh.getTags();
+}
+
+export async function tagsIndexByStringKey(): Promise<string | number | string[] | number[] | undefined> {
+  const tags = await Pushwoosh.getTags();
+  return tags['favorite_categories'];
+}
+
+export async function legacyTagsDestructuringStillCompiles(): Promise<unknown> {
+  // Hosts written against the old `{ tags }` declaration keep compiling; they read undefined, as they already did at runtime.
+  const { tags } = await Pushwoosh.getTags();
+  return tags;
+}
+
+export function tagsRejectEnvelopeShape(): Promise<{ tags: PushwooshTags }> {
+  // @ts-expect-error the declaration no longer promises a `tags` envelope
+  return Pushwoosh.getTags();
 }

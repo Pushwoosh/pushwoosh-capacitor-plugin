@@ -20,6 +20,11 @@ target 'App' do
   # Add your Pods here
 end
 
+# No version on purpose: it resolves to the pin the plugin's podspec declares.
+target 'NotificationService' do
+  pod 'PushwooshXCFramework'
+end
+
 post_install do |installer|
   assertDeploymentTarget(installer)
 end

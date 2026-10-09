@@ -175,18 +175,21 @@ public class Pushwoosh {
         com.pushwoosh.Pushwoosh.getInstance().getTags(new Callback<TagsBundle, GetTagsException>() {
             @Override
             public void process(@NonNull final Result<TagsBundle, GetTagsException> result) {
-                if(result.isSuccess()) {
-                    try {
-                        JSObject response = JSObject.fromJSONObject(result.getData().toJson());
-                        call.resolve(response);
-                    } catch (Exception e) {
-
-                    }
+                if (result.isSuccess()) {
+                    resolveTags(call, result.getData().toJson());
                 } else {
                     call.reject("Failed to get Tags", result.getException().getMessage());
                 }
             }
         });
+    }
+
+    static void resolveTags(PluginCall call, JSONObject tags) {
+        try {
+            call.resolve(JSObject.fromJSONObject(tags));
+        } catch (Exception e) {
+            call.reject("Failed to get Tags", e.getMessage(), e);
+        }
     }
 
     public void setUserId(String userId, PluginCall call) {

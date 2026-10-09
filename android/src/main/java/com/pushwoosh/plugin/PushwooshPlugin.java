@@ -23,6 +23,7 @@ import java.util.List;
 public class PushwooshPlugin extends Plugin {
 
     private Pushwoosh implementation = new Pushwoosh();
+    private Inbox inbox = new Inbox();
 
     @PluginMethod(returnType = PluginMethod.RETURN_CALLBACK)
     public void pushReceivedCallback(PluginCall call) {
@@ -216,6 +217,56 @@ public class PushwooshPlugin extends Plugin {
             return;
         }
         implementation.setCommunicationEnabled(enabled, call);
+    }
+
+    @PluginMethod
+    public void presentInboxUI(PluginCall call) {
+        inbox.presentInboxUI(getActivity(), call.getData(), call);
+    }
+
+    @PluginMethod
+    public void loadMessages(PluginCall call) {
+        inbox.loadMessages(call);
+    }
+
+    @PluginMethod
+    public void messagesCount(PluginCall call) {
+        inbox.messagesCount(call);
+    }
+
+    @PluginMethod
+    public void unreadMessagesCount(PluginCall call) {
+        inbox.unreadMessagesCount(call);
+    }
+
+    @PluginMethod
+    public void messagesWithNoActionPerformedCount(PluginCall call) {
+        inbox.messagesWithNoActionPerformedCount(call);
+    }
+
+    @PluginMethod
+    public void readMessage(PluginCall call) {
+        inbox.readMessage(call);
+    }
+
+    @PluginMethod
+    public void readMessages(PluginCall call) {
+        inbox.readMessages(call);
+    }
+
+    @PluginMethod
+    public void deleteMessage(PluginCall call) {
+        inbox.deleteMessage(call);
+    }
+
+    @PluginMethod
+    public void deleteMessages(PluginCall call) {
+        inbox.deleteMessages(call);
+    }
+
+    @PluginMethod
+    public void performAction(PluginCall call) {
+        inbox.performAction(call);
     }
 
     private HashMap<String, String> convertToHashMapString(JSObject jsObject) {

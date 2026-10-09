@@ -1,6 +1,6 @@
 import { WebPlugin } from '@capacitor/core';
 import {PushwooshConfig, PushwooshTags, AuthOptions, RemoteNotificationStatus, PushwooshNotificationCallback, CallbackID } from './definitions';
-import type { PushwooshPlugin } from './definitions';
+import type { PushwooshPlugin, InboxNotification, InboxStyle } from './definitions';
 
 export class PushwooshWeb extends WebPlugin implements PushwooshPlugin {
 
@@ -31,9 +31,9 @@ export class PushwooshWeb extends WebPlugin implements PushwooshPlugin {
   }
 
   // getTags implementation
-  async getTags(): Promise<{ tags: PushwooshTags }> {
+  async getTags(): Promise<PushwooshTags> {
     console.log("getTags called");
-    return { tags: {} }; // return empty tags as a stub
+    return {}; // return empty tags as a stub
   }
 
   // getPushToken implementation
@@ -124,8 +124,57 @@ export class PushwooshWeb extends WebPlugin implements PushwooshPlugin {
   }
 
   // presentInboxUI implementation
-  presentInboxUI(params?: Record<string, any>): void {
-    console.log("presentInboxUI called with params:", params);
+  async presentInboxUI(style?: InboxStyle): Promise<void> {
+    console.log('presentInboxUI called with style:', style);
+  }
+
+  // loadMessages implementation
+  async loadMessages(): Promise<{ messages: InboxNotification[] }> {
+    console.log('loadMessages called');
+    return { messages: [] };
+  }
+
+  // messagesCount implementation
+  async messagesCount(): Promise<{ value: number }> {
+    console.log('messagesCount called');
+    return { value: 0 };
+  }
+
+  // unreadMessagesCount implementation
+  async unreadMessagesCount(): Promise<{ value: number }> {
+    console.log('unreadMessagesCount called');
+    return { value: 0 };
+  }
+
+  // messagesWithNoActionPerformedCount implementation
+  async messagesWithNoActionPerformedCount(): Promise<{ value: number }> {
+    console.log('messagesWithNoActionPerformedCount called');
+    return { value: 0 };
+  }
+
+  // readMessage implementation
+  async readMessage(options: { code: string }): Promise<void> {
+    console.log('readMessage called with options:', options);
+  }
+
+  // readMessages implementation
+  async readMessages(options: { codes: string[] }): Promise<void> {
+    console.log('readMessages called with options:', options);
+  }
+
+  // deleteMessage implementation
+  async deleteMessage(options: { code: string }): Promise<void> {
+    console.log('deleteMessage called with options:', options);
+  }
+
+  // deleteMessages implementation
+  async deleteMessages(options: { codes: string[] }): Promise<void> {
+    console.log('deleteMessages called with options:', options);
+  }
+
+  // performAction implementation
+  async performAction(options: { code: string }): Promise<void> {
+    console.log('performAction called with options:', options);
   }
 
   // setCommunicationEnabled implementation

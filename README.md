@@ -6,13 +6,13 @@ Pushwoosh plugin for Capacitor
 
 ### NPM Installation
 ```bash
-npm install pushwoosh-capacitor-plugin@1.0.12
+npm install pushwoosh-capacitor-plugin@1.0.13
 npx cap sync
 ```
 
 ### Git Installation
 ```bash
-npm install git+https://github.com/Pushwoosh/pushwoosh-capacitor-plugin.git#1.0.12
+npm install git+https://github.com/Pushwoosh/pushwoosh-capacitor-plugin.git#1.0.13
 npx cap sync
 ```
 
@@ -71,10 +71,44 @@ await Pushwoosh.setTags({
   favorite_categories: ['sports', 'news'],
 });
 
-// Get tags
-const { tags } = await Pushwoosh.getTags();
+// Get tags — resolves to a flat object: { age: 25, name: 'John', favorite_categories: ['sports', 'news'] }
+const tags = await Pushwoosh.getTags();
 console.log('Tags:', tags);
 ```
+
+### Inbox
+
+```typescript
+// Open the native inbox screen, styled for your app
+await Pushwoosh.presentInboxUI({
+  barTitle: 'Notifications',
+  dateFormat: 'dd.MM.yyyy',
+  accentColor: '#ff6600',
+  listEmptyMessage: 'Nothing here yet',
+});
+
+// Badge your own inbox button
+const { value: unread } = await Pushwoosh.unreadMessagesCount();
+
+// Build your own list on top of the inbox
+const { messages } = await Pushwoosh.loadMessages();
+for (const message of messages) {
+  console.log(message.code, message.title, message.isRead);
+}
+
+// Act on a message from your own UI
+await Pushwoosh.readMessage({ code: messages[0].code });
+await Pushwoosh.performAction({ code: messages[0].code });
+await Pushwoosh.deleteMessages({ codes: messages.map((m) => m.code) });
+```
+
+Style images are addressed by a path relative to your app's `webDir`, so they can sit next to the
+rest of your web assets: `{ defaultImageIcon: 'assets/inbox-icon.png' }`. Colors accept `#RGB`,
+`#RRGGBB`, `#AARRGGBB`, `0xRRGGBB` and `0xAARRGGBB`. A value a platform cannot parse is ignored
+with a console warning and the rest of the style still applies.
+
+On the web, every inbox method resolves with an empty value instead of throwing, so one codebase
+runs on all three targets.
 
 ## API
 
@@ -103,6 +137,15 @@ console.log('Tags:', tags);
 * [`pushReceivedCallback(...)`](#pushreceivedcallback)
 * [`pushOpenedCallback(...)`](#pushopenedcallback)
 * [`presentInboxUI(...)`](#presentinboxui)
+* [`loadMessages()`](#loadmessages)
+* [`messagesCount()`](#messagescount)
+* [`unreadMessagesCount()`](#unreadmessagescount)
+* [`messagesWithNoActionPerformedCount()`](#messageswithnoactionperformedcount)
+* [`readMessage(...)`](#readmessage)
+* [`readMessages(...)`](#readmessages)
+* [`deleteMessage(...)`](#deletemessage)
+* [`deleteMessages(...)`](#deletemessages)
+* [`performAction(...)`](#performaction)
 * [`setCommunicationEnabled(...)`](#setcommunicationenabled)
 * [`isCommunicationEnabled(...)`](#iscommunicationenabled)
 * [Interfaces](#interfaces)
@@ -175,10 +218,16 @@ setTags(config: PushwooshTags) => Promise<void>
 ### getTags()
 
 ```typescript
-getTags() => Promise<{ tags: PushwooshTags; }>
+getTags() => Promise<PushwooshTags>
 ```
 
-**Returns:** <code>Promise&lt;{ tags: <a href="#pushwooshtags">PushwooshTags</a>; }&gt;</code>
+Reads the device tags from Pushwoosh.
+
+Resolves to the tags as a flat object (tag name → value), with no `tags` envelope —
+the same shape the native SDKs and the other Pushwoosh plugins return.
+Rejects when the native read fails.
+
+**Returns:** <code>Promise&lt;<a href="#pushwooshtags">PushwooshTags</a>&gt;</code>
 
 --------------------
 
@@ -382,12 +431,146 @@ pushOpenedCallback(callback: PushwooshNotificationCallback) => Promise<CallbackI
 ### presentInboxUI(...)
 
 ```typescript
-presentInboxUI(params?: Record<string, any> | undefined) => void
+presentInboxUI(style?: InboxStyle | undefined) => Promise<void>
 ```
 
-| Param        | Type                                                         |
-| ------------ | ------------------------------------------------------------ |
-| **`params`** | <code><a href="#record">Record</a>&lt;string, any&gt;</code> |
+Opens the native inbox screen of the Pushwoosh SDK.
+
+The style of each call is the SDK defaults plus the keys passed here — keys of a previous
+call do not carry over. Resolves once the screen is on display, and rejects with the reason
+in the message when it cannot be: no view controller or activity to present it from, or a
+presentation of the inbox already under way.
+
+| Param       | Type                                              |
+| ----------- | ------------------------------------------------- |
+| **`style`** | <code><a href="#inboxstyle">InboxStyle</a></code> |
+
+--------------------
+
+
+### loadMessages()
+
+```typescript
+loadMessages() => Promise<{ messages: InboxNotification[]; }>
+```
+
+Reads the inbox from the server. An empty inbox resolves an empty array, not an error.
+
+**Returns:** <code>Promise&lt;{ messages: InboxNotification[]; }&gt;</code>
+
+--------------------
+
+
+### messagesCount()
+
+```typescript
+messagesCount() => Promise<{ value: number; }>
+```
+
+Total number of inbox messages.
+
+**Returns:** <code>Promise&lt;{ value: number; }&gt;</code>
+
+--------------------
+
+
+### unreadMessagesCount()
+
+```typescript
+unreadMessagesCount() => Promise<{ value: number; }>
+```
+
+Number of inbox messages the user has not read.
+
+**Returns:** <code>Promise&lt;{ value: number; }&gt;</code>
+
+--------------------
+
+
+### messagesWithNoActionPerformedCount()
+
+```typescript
+messagesWithNoActionPerformedCount() => Promise<{ value: number; }>
+```
+
+Number of inbox messages whose action has not been performed.
+
+**Returns:** <code>Promise&lt;{ value: number; }&gt;</code>
+
+--------------------
+
+
+### readMessage(...)
+
+```typescript
+readMessage(options: { code: string; }) => Promise<void>
+```
+
+Marks one message as read.
+
+| Param         | Type                           |
+| ------------- | ------------------------------ |
+| **`options`** | <code>{ code: string; }</code> |
+
+--------------------
+
+
+### readMessages(...)
+
+```typescript
+readMessages(options: { codes: string[]; }) => Promise<void>
+```
+
+Marks a batch of messages as read.
+
+| Param         | Type                              |
+| ------------- | --------------------------------- |
+| **`options`** | <code>{ codes: string[]; }</code> |
+
+--------------------
+
+
+### deleteMessage(...)
+
+```typescript
+deleteMessage(options: { code: string; }) => Promise<void>
+```
+
+Deletes one message from the inbox.
+
+| Param         | Type                           |
+| ------------- | ------------------------------ |
+| **`options`** | <code>{ code: string; }</code> |
+
+--------------------
+
+
+### deleteMessages(...)
+
+```typescript
+deleteMessages(options: { codes: string[]; }) => Promise<void>
+```
+
+Deletes a batch of messages from the inbox.
+
+| Param         | Type                              |
+| ------------- | --------------------------------- |
+| **`options`** | <code>{ codes: string[]; }</code> |
+
+--------------------
+
+
+### performAction(...)
+
+```typescript
+performAction(options: { code: string; }) => Promise<void>
+```
+
+Performs the message's own action — opens its rich media, URL or deep link.
+
+| Param         | Type                           |
+| ------------- | ------------------------------ |
+| **`options`** | <code>{ code: string; }</code> |
 
 --------------------
 
@@ -434,6 +617,42 @@ isCommunicationEnabled(success: (enabled: boolean) => void) => void
 #### PushwooshTags
 
 
+#### InboxStyle
+
+Appearance of the native inbox screen, applied per `presentInboxUI` call.
+
+Colors accept `#RGB`, `#RRGGBB`, `#AARRGGBB`, `0xRRGGBB` and `0xAARRGGBB`. The hex digits may be
+upper or lower case; the `0x` prefix must be lowercase.
+Images are addressed by a path relative to your app's `webDir`, so they can live next to the
+rest of your web assets. A value the platform cannot parse is ignored with a console warning
+and the remaining keys still apply.
+
+| Prop                       | Type                | Description                                                                          |
+| -------------------------- | ------------------- | ------------------------------------------------------------------------------------ |
+| **`dateFormat`**           | <code>string</code> | Date pattern of the message date. Android `SimpleDateFormat`, iOS `NSDateFormatter`. |
+| **`barTitle`**             | <code>string</code> | Title of the navigation bar.                                                         |
+| **`listEmptyMessage`**     | <code>string</code> | Text shown when the inbox is empty.                                                  |
+| **`listErrorMessage`**     | <code>string</code> | Text shown when the inbox fails to load.                                             |
+| **`defaultImageIcon`**     | <code>string</code> | Icon shown next to a message that carries no image of its own.                       |
+| **`listEmptyImage`**       | <code>string</code> | Image shown when the inbox is empty.                                                 |
+| **`listErrorImage`**       | <code>string</code> | Image shown when the inbox fails to load.                                            |
+| **`accentColor`**          | <code>string</code> |                                                                                      |
+| **`backgroundColor`**      | <code>string</code> |                                                                                      |
+| **`highlightColor`**       | <code>string</code> | Color of the pressed state of a row.                                                 |
+| **`titleColor`**           | <code>string</code> |                                                                                      |
+| **`descriptionColor`**     | <code>string</code> |                                                                                      |
+| **`dateColor`**            | <code>string</code> |                                                                                      |
+| **`dividerColor`**         | <code>string</code> | Color of the separator between rows.                                                 |
+| **`barBackgroundColor`**   | <code>string</code> |                                                                                      |
+| **`barAccentColor`**       | <code>string</code> |                                                                                      |
+| **`barTextColor`**         | <code>string</code> |                                                                                      |
+| **`readTitleColor`**       | <code>string</code> | Android only: title color of a read message.                                         |
+| **`readDescriptionColor`** | <code>string</code> | Android only: text color of a read message.                                          |
+| **`readDateColor`**        | <code>string</code> | Android only: date color of a read message.                                          |
+| **`unreadImage`**          | <code>string</code> | iOS only: the unread marker image.                                                   |
+| **`defaultTextColor`**     | <code>string</code> | iOS only: the default text color.                                                    |
+
+
 ### Type Aliases
 
 
@@ -462,5 +681,15 @@ Construct a type with a set of properties K of type T
 #### CallbackID
 
 <code>string</code>
+
+
+#### InboxNotification
+
+One message of the Message Inbox, as both native platforms report it.
+
+A field the native message does not carry is omitted, not sent as an empty string or null —
+read it with `?.` or `??`, not with a truthiness check on a guaranteed key.
+
+<code>{ /** Inbox message identifier. The only guaranteed field; every mutator takes it. */ code: string; title?: string; message?: string; /** Icon shown next to the message in the inbox list. */ imageUrl?: string; /** Banner image of the message, taken from the `b` action parameter on both platforms. */ bannerUrl?: string; /** ISO 8601 with a timezone offset, e.g. `2026-10-07T14:32:05+0300`. */ sendDate?: string; /** * Message type, with the same codes on Android and iOS: * 0 plain, 1 rich media, 2 URL, 3 deep link. */ type?: number; isRead?: boolean; isActionPerformed?: boolean; /** Raw action parameters of the message as sent by Pushwoosh. */ actionParams?: <a href="#record">Record</a>&lt;string, unknown&gt;; /** Custom data attached to the push, taken from the `u` action parameter. */ customData?: <a href="#record">Record</a>&lt;string, unknown&gt;; }</code>
 
 </docgen-api>
